@@ -5,9 +5,11 @@ import { api } from "../../services/api";
 import ptPT from "date-fns/locale/pt";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 import Link from "next/link";
-
+import Head from "next/head";
 import Image from "next/image";
 import styles from "./episode.module.scss";
+import { useContext } from "react";
+import { PlayerContext, usePlayer } from "../../contexts/PlayerContext";
 
 type Episode = {
   id: string;
@@ -26,9 +28,12 @@ type EpisodeProps = {
 };
 
 export default function Episodes({ episode }: EpisodeProps) {
-  const router = useRouter();
+  const { play } = usePlayer();
   return (
     <div className={styles.episode}>
+      <Head>
+        <title>{episode.title} | Podcastr</title>
+      </Head>
       <div className={styles.thumbnailContainer}>
         <Link href="/">
           <button type="button">
@@ -41,7 +46,12 @@ export default function Episodes({ episode }: EpisodeProps) {
           src={episode.thumbnail}
           objectFit="cover"
         ></Image>
-        <button type="button">
+        <button
+          type="button"
+          onClick={() => {
+            play(episode);
+          }}
+        >
           <img src="/play.svg" alt="Tocar Episodio" />
         </button>
       </div>
